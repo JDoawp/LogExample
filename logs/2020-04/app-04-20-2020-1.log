@@ -1,0 +1,10 @@
+2020-Apr-20 03:53:01 PM  DEBUG com.logging.Main - Debug 
+2020-Apr-20 03:53:01 PM  INFO com.logging.Main - Info 
+2020-Apr-20 03:53:01 PM  WARN com.logging.Main - Warn 
+2020-Apr-20 03:53:01 PM  ERROR com.logging.Main - Error 
+2020-Apr-20 03:53:01 PM  FATAL com.logging.Main - Fatal 
+2020-Apr-20 03:53:01 PM  INFO com.logging.Main - Appending string: Hello, World. 
+2020-Apr-20 03:53:01 PM  ERROR com.logging.Main - Logger exception:  
+java.lang.Exception: Throwing Exception
+	at com.logging.Main.throwError(Main.java:31) ~[classes/:?]
+	at com.logging.Main.main(Main.java:23) [classes/:?]

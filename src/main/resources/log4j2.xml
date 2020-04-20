@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Properties>
+        <Property name="basePath">../logs</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MMM-dd hh:mm:ss a } %level %c - %m %n" />
+        </Console>
+        <JDBC name="MariaDB" tableName="APP_LOGS"> <!-- https://www.boraji.com/log4j-2-jdbcappender-example -->
+            <ConnectionFactory
+                    class="com.logging.ConnectionFactory" method="getConnection" />
+            <Column name="LOG_ID" pattern="%u" />
+            <Column name="ENTRY_DATE" isEventTimestamp="true" />
+            <Column name="LOGGER" pattern="%logger" />
+            <Column name="LOG_LEVEL" pattern="%level" />
+            <Column name="MESSAGE" pattern="%m" />
+            <Column name="EXCEPTION" pattern="%throwable " />
+        </JDBC>
+
+        <!-- https://stackify.com/log4j2-java/ -->
+        <RollingFile name="RolloverFileAppender" fileName="${basePath}/logfile.log"
+                     filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MMM-dd hh:mm:ss a } %level %c - %m %n</Pattern>
+            </PatternLayout>
+
+            <Policies>
+                <OnStartupTriggeringPolicy/>
+            </Policies>
+
+            <DefaultRolloverStrategy max="20"/>
+        </RollingFile>
+
+        <Failover name="FailoverAppender" primary="MariaDB" ignoreExceptions="false">
+            <Failovers>
+                <AppenderRef ref="RolloverFileAppender" level="trace"/>
+            </Failovers>
+        </Failover>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="com.logging" level="debug"
+                additivity="false">
+            <AppenderRef ref="FailoverAppender" />
+            <AppenderRef ref="Console" />
+        </Logger>
+
+        <Root level="trace">
+            <AppenderRef ref="FailoverAppender" />
+            <AppenderRef ref="Console" />
+        </Root>
+    </Loggers>
+
+</Configuration>
